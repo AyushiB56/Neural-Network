@@ -1,3 +1,26 @@
+import torch
+import numpy as np
+import torch.nn as nn
+
+def activation_function(Z):
+
+  sigmoid_fnn = 1/ (1+torch.exp(-Z))
+  return sigmoid_fnn
+
+
+
+
+def forward_pass(X, W_list,bias):
+  for idx in range(len(W_list)):
+    Z= torch.matmul(W_list[idx],X)
+    Z= Z+ bias[idx]
+    X= activation_function(Z)
+
+  return X
+
+
+
+
 def train_sgd():
 
     n= 1000
