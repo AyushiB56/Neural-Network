@@ -1,3 +1,15 @@
+def activation_function(Z):
+
+  sigmoid_fnn = 1/ (1+torch.exp(-Z))
+  return sigmoid_fnn
+def forward_pass(X, W_list,bias):
+  for idx in range(len(W_list)):
+    Z= torch.matmul(W_list[idx],X)
+    Z= Z+ bias[idx]
+    X= activation_function(Z)
+
+  return X
+
 def train_mini_batch():
     n= 1000
     input_dim=10
@@ -40,7 +52,7 @@ def train_mini_batch():
             Loss= nn.BCELoss()
             Loss_value+= Loss(result,yin)
         #avg_loss.append(Loss_value.item())
-        print(Loss_value)
+        
         Loss_value=Loss_value/batch_size
 
         Loss_value.backward()
