@@ -1,25 +1,3 @@
-import torch
-import numpy as np
-import torch.nn as nn
-
-def activation_function(Z):
-
-  sigmoid_fnn = 1/ (1+torch.exp(-Z))
-  return sigmoid_fnn
-
-
-
-
-def forward_pass(X, W_list,bias):
-  for idx in range(len(W_list)):
-    Z= torch.matmul(W_list[idx],X)
-    Z= Z+ bias[idx]
-    X= activation_function(Z)
-
-  return X
-
-
-
 def train_mini_batch():
     n= 1000
     input_dim=10
@@ -44,13 +22,14 @@ def train_mini_batch():
 
     start = 0
     for epoch in range(100):
+      tic= time.time()
       for start in range(0,num_of_batches,batch_size):
           X_batch=X[start:batch_size]
           y_batch=y[start:batch_size]
 
 
           Loss_value=0
-          tic= time.time()
+          
           end = start+ batch_size
           for i in range(len(y_batch)):
 
@@ -61,29 +40,30 @@ def train_mini_batch():
             Loss= nn.BCELoss()
             Loss_value+= Loss(result,yin)
         #avg_loss.append(Loss_value.item())
+        print(Loss_value)
         Loss_value=Loss_value/batch_size
 
-      Loss_value.backward()
-      for gradient in W_list:
-          dw.append(gradient.grad)
+        Loss_value.backward()
+        for gradient in W_list:
+            dw.append(gradient.grad)
 
-      for gradient in bias_list:
-          bias_db.append(gradient.grad)
-
-
+        for gradient in bias_list:
+            bias_db.append(gradient.grad)
 
 
-      with torch.no_grad():
-          for idx in range(len(W_list)):
-            W_list[idx] -= learning_rate * dw[idx]
-            bias_list[idx] -= learning_rate * bias_db[idx]
 
 
-      for j in range(len(W_list)):
-          W_list[j].grad.data.zero_()
+        with torch.no_grad():
+            for idx in range(len(W_list)):
+              W_list[idx] -= learning_rate * dw[idx]
+              bias_list[idx] -= learning_rate * bias_db[idx]
 
-      for j in range(len(bias_list)):
-          bias_list[j].grad.data.zero_()
+
+        for j in range(len(W_list)):
+            W_list[j].grad.data.zero_()
+
+        for j in range(len(bias_list)):
+            bias_list[j].grad.data.zero_()
 
       toc= time.time()
       print(f"The average loss per epoch - {epoch}: {Loss_value/num_of_batches}")
