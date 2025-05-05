@@ -61,7 +61,7 @@ def train_mini_batch():
             Loss= nn.BCELoss()
             Loss_value+= Loss(result,yin)
         #avg_loss.append(Loss_value.item())
-      Loss_value=Loss_value/batch_size
+        Loss_value=Loss_value/batch_size
 
       Loss_value.backward()
       for gradient in W_list:
